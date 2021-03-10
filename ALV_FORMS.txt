@@ -1,0 +1,1344 @@
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK47
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik48.
+
+
+data: lv_vbeln type vbak-vbeln.
+select-options:so_vbeln for lv_vbeln default '4972' to '5000'.
+data:it_fieldcat type  slis_t_fieldcat_alv , " table type
+     wa_fieldcat type slis_fieldcat_alv. " structure type
+
+
+
+select vbak~vbeln ,vbak~erdat,vbak~ernam, posnr, matnr,matwa from vbak inner join vbap on vbak~vbeln = vbap~vbeln
+  into table @data(it_final) where vbak~vbeln in @so_vbeln.
+
+*
+*  Loop at IT_FINAL INTO DATA(WA_FINAL).
+*    WRITE:/ WA_FINAL-vbeln,WA_FINAL-ERDAT.
+*
+*    ENDLOOP.
+start-of-selection.
+  perform buildcat.
+  call function 'REUSE_ALV_GRID_DISPLAY'
+    exporting
+*     I_INTERFACE_CHECK        = ' '
+*     I_BYPASSING_BUFFER       = ' '
+*     I_BUFFER_ACTIVE          = ' '
+      i_callback_program       = sy-repid
+      i_callback_pf_status_set = 'ZZPFSTATUS'
+      i_callback_user_command  = 'ZZUSERCOMMAND'
+      i_callback_top_of_page   = 'ZZTOP'
+*     I_CALLBACK_HTML_TOP_OF_PAGE       = ' '
+*     I_CALLBACK_HTML_END_OF_LIST       = ' '
+*     I_STRUCTURE_NAME         = 'ZVBAKVBAP'
+*     I_BACKGROUND_ID          = ' '
+      i_grid_title             = 'Sales report'
+*     I_GRID_SETTINGS          =
+*     IS_LAYOUT                =  " workarea
+      it_fieldcat              = it_fieldcat " table
+*     IT_EXCLUDING             =
+*     IT_SPECIAL_GROUPS        =
+*     IT_SORT                  =
+*     IT_FILTER                =
+*     IS_SEL_HIDE              =
+*     I_DEFAULT                = 'X'
+*     I_SAVE                   = ' '
+*     IS_VARIANT               =
+*     IT_EVENTS                =
+*     IT_EVENT_EXIT            =
+*     IS_PRINT                 =
+*     IS_REPREP_ID             =
+*     I_SCREEN_START_COLUMN    = 0
+*     I_SCREEN_START_LINE      = 0
+*     I_SCREEN_END_COLUMN      = 0
+*     I_SCREEN_END_LINE        = 0
+*     I_HTML_HEIGHT_TOP        = 0
+*     I_HTML_HEIGHT_END        = 0
+*     IT_ALV_GRAPHICS          =
+*     IT_HYPERLINK             =
+*     IT_ADD_FIELDCAT          =
+*     IT_EXCEPT_QINFO          =
+*     IR_SALV_FULLSCREEN_ADAPTER        =
+* IMPORTING
+*     E_EXIT_CAUSED_BY_CALLER  =
+*     ES_EXIT_CAUSED_BY_USER   =
+    tables
+      t_outtab                 = it_final
+* EXCEPTIONS
+*     PROGRAM_ERROR            = 1
+*     OTHERS                   = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+*&---------------------------------------------------------------------*
+*&      Form  BUILDCAT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+form buildcat .
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'VBELN'.
+  wa_fieldcat-seltext_m = 'Order number'.
+  wa_fieldcat-seltext_l = 'Order number reference document '.
+  wa_fieldcat-seltext_s = 'Order'.
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+
+
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'ERDAT'.
+  wa_fieldcat-seltext_m = 'Order DAte'.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+
+
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'ERNAM'.
+  wa_fieldcat-seltext_m = 'Created by'.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'POSNR'.
+  wa_fieldcat-seltext_m = 'Item '.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'MATNR'.
+  wa_fieldcat-seltext_m = 'Material Number'.
+
+  append wa_fieldcat to it_fieldcat.
+
+  clear wa_fieldcat.
+
+
+endform.
+
+form zztop.
+  data:lt_header type slis_t_listheader,
+       wa_header type slis_listheader.
+
+  wa_header-typ = 'H'.
+  wa_header-key = 'SALES ORDER REPORT'.
+  wa_header-info = 'SALES ORDER REPORT'.
+
+  append wa_header to lt_header.
+
+
+
+  wa_header-typ = 'S'.
+  wa_header-key = 'Todays Date'.
+  wa_header-info = sy-datum.
+
+  append wa_header to lt_header.
+
+
+  wa_header-typ = 'A'.
+  wa_header-key = 'SALES ORDER REPORT'.
+  wa_header-info = 'SALES ORDER REPORT'.
+
+  append wa_header to lt_header.
+  call function 'REUSE_ALV_COMMENTARY_WRITE'
+    exporting
+      it_list_commentary = lt_header
+      i_logo             = 'ZDELPHI'
+*     I_END_OF_LIST_GRID =
+*     I_ALV_FORM         =
+    .
+
+
+endform.
+
+
+
+form zzpfstatus using lt_extab." subroutine
+  set pf-status 'NEILPRATIK'.
+
+endform.
+
+
+form zzusercommand   using r_ucomm
+        ls_selfield type slis_selfield.
+
+
+  case r_ucomm.
+    when 'NEIL'.
+
+      message 'You have clicked on Neil' type  'I'.
+    when 'PRATEEK'.
+
+      message 'You have clicked on Pratik' type  'I'.
+
+    when '&IC1'.
+      if ls_selfield-fieldname = 'VBELN'.
+        set parameter id 'AUN' field ls_selfield-value.
+        call transaction 'VA03'.
+      elseif ls_selfield-fieldname = 'MATNR'.
+        set parameter id 'MAT' field ls_selfield-value.
+        call transaction 'MM03'.
+      endif.
+
+  endcase.
+
+
+endform.
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK49
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik49.
+
+
+data: lv_vbeln type vbak-vbeln.
+select-options:so_vbeln for lv_vbeln default '4972' to '5000'.
+data:it_fieldcat type  slis_t_fieldcat_alv , " table type
+     wa_fieldcat type slis_fieldcat_alv. " structure type
+
+
+types:begin of ty_final,
+        vbeln type vbeln,
+        erdat type erdat,
+        ernam type ernam,
+        posnr type posnr,
+        matnr type matnr,
+        matwa type matwa,
+        color type c length 4,
+
+      end of ty_final.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: wa_layout type slis_layout_alv.
+
+start-of-selection.
+  select vbak~vbeln  vbak~erdat vbak~ernam  posnr matnr matwa from vbak inner join vbap on vbak~vbeln = vbap~vbeln
+    into table it_final where vbak~vbeln in so_vbeln.
+
+*
+*  Loop at IT_FINAL INTO DATA(WA_FINAL).
+*    WRITE:/ WA_FINAL-vbeln,WA_FINAL-ERDAT.
+*
+
+  loop at it_final into wa_final .
+
+    if wa_final-posnr = '00010'.
+      wa_final-color = 'C310'." HEXADECIMAL VALUES C110 C201 C310 C410 C510 C610 C710
+
+    elseif wa_final-posnr = '00020'.
+      wa_final-color = 'C410'.
+    elseif wa_final-posnr = '00030'.
+      wa_final-color = 'C510'.
+    else.
+
+      wa_final-color = 'C610'.
+
+    endif.
+    modify it_final from wa_final transporting color.
+  endloop.
+  perform buildcat.
+
+  wa_layout-info_fieldname = 'COLOR'.
+*WA_LAYOUT-ZEBRA = 'X'.
+  call function 'REUSE_ALV_GRID_DISPLAY'
+    exporting
+*     I_INTERFACE_CHECK        = ' '
+*     I_BYPASSING_BUFFER       = ' '
+*     I_BUFFER_ACTIVE          = ' '
+      i_callback_program       = sy-repid
+      i_callback_pf_status_set = 'ZZPFSTATUS'
+      i_callback_user_command  = 'ZZUSERCOMMAND'
+      i_callback_top_of_page   = 'ZZTOP'
+*     I_CALLBACK_HTML_TOP_OF_PAGE       = ' '
+*     I_CALLBACK_HTML_END_OF_LIST       = ' '
+*     I_STRUCTURE_NAME         = 'ZVBAKVBAP'
+*     I_BACKGROUND_ID          = ' '
+      i_grid_title             = 'Sales report'
+*     I_GRID_SETTINGS          =
+      is_layout                = wa_layout " workarea
+      it_fieldcat              = it_fieldcat " table
+*     IT_EXCLUDING             =
+*     IT_SPECIAL_GROUPS        =
+*     IT_SORT                  =
+*     IT_FILTER                =
+*     IS_SEL_HIDE              =
+*     I_DEFAULT                = 'X'
+*     I_SAVE                   = ' '
+*     IS_VARIANT               =
+*     IT_EVENTS                =
+*     IT_EVENT_EXIT            =
+*     IS_PRINT                 =
+*     IS_REPREP_ID             =
+*     I_SCREEN_START_COLUMN    = 0
+*     I_SCREEN_START_LINE      = 0
+*     I_SCREEN_END_COLUMN      = 0
+*     I_SCREEN_END_LINE        = 0
+*     I_HTML_HEIGHT_TOP        = 0
+*     I_HTML_HEIGHT_END        = 0
+*     IT_ALV_GRAPHICS          =
+*     IT_HYPERLINK             =
+*     IT_ADD_FIELDCAT          =
+*     IT_EXCEPT_QINFO          =
+*     IR_SALV_FULLSCREEN_ADAPTER        =
+* IMPORTING
+*     E_EXIT_CAUSED_BY_CALLER  =
+*     ES_EXIT_CAUSED_BY_USER   =
+    tables
+      t_outtab                 = it_final
+* EXCEPTIONS
+*     PROGRAM_ERROR            = 1
+*     OTHERS                   = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+*&---------------------------------------------------------------------*
+*&      Form  BUILDCAT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+form buildcat .
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'VBELN'.
+  wa_fieldcat-seltext_m = 'Order number'.
+  wa_fieldcat-seltext_l = 'Order number reference document '.
+  wa_fieldcat-seltext_s = 'Order'.
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+
+
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'ERDAT'.
+  wa_fieldcat-seltext_m = 'Order DAte'.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+
+
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'ERNAM'.
+  wa_fieldcat-seltext_m = 'Created by'.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'POSNR'.
+  wa_fieldcat-seltext_m = 'Item '.
+
+  append wa_fieldcat to it_fieldcat.
+  clear wa_fieldcat.
+  wa_fieldcat-tabname = 'IT_FINAL'.
+  wa_fieldcat-fieldname = 'MATNR'.
+  wa_fieldcat-seltext_m = 'Material Number'.
+
+  append wa_fieldcat to it_fieldcat.
+
+  clear wa_fieldcat.
+
+
+endform.
+
+form zztop.
+  data:lt_header type slis_t_listheader,
+       wa_header type slis_listheader.
+
+  wa_header-typ = 'H'.
+  wa_header-key = 'SALES ORDER REPORT'.
+  wa_header-info = 'SALES ORDER REPORT'.
+
+  append wa_header to lt_header.
+
+
+
+  wa_header-typ = 'S'.
+  wa_header-key = 'Todays Date'.
+  wa_header-info = sy-datum.
+
+  append wa_header to lt_header.
+
+
+  wa_header-typ = 'A'.
+  wa_header-key = 'SALES ORDER REPORT'.
+  wa_header-info = 'SALES ORDER REPORT'.
+
+  append wa_header to lt_header.
+  call function 'REUSE_ALV_COMMENTARY_WRITE'
+    exporting
+      it_list_commentary = lt_header
+      i_logo             = 'ZDELPHI'
+*     I_END_OF_LIST_GRID =
+*     I_ALV_FORM         =
+    .
+
+
+endform.
+
+
+
+form zzpfstatus using lt_extab." subroutine
+  set pf-status 'NEILPRATIK'.
+
+endform.
+
+
+form zzusercommand   using r_ucomm
+        ls_selfield type slis_selfield.
+
+
+  case r_ucomm.
+    when 'NEIL'.
+
+      message 'You have clicked on Neil' type  'I'.
+    when 'PRATEEK'.
+
+      message 'You have clicked on Pratik' type  'I'.
+
+    when '&IC1'.
+      if ls_selfield-fieldname = 'VBELN'.
+        set parameter id 'AUN' field ls_selfield-value.
+        call transaction 'VA03'.
+      elseif ls_selfield-fieldname = 'MATNR'.
+        set parameter id 'MAT' field ls_selfield-value.
+        call transaction 'MM03'.
+      endif.
+
+  endcase.
+
+
+endform.
+
+
+
+
+
+report zneilpratik50.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         rollnu type n length 5,
+         name   type c length 20,
+         lname  type c length 20,
+         date   type c length 12,
+       end of ty_final.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+       I_LINE_HEADER        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+  loop at it_final into wa_final.
+
+    write:/ wa_final-rollnu,wa_final-name,wa_final-lname,wa_final-date.
+  endloop.
+
+
+
+
+
+
+report zneilpratik51.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         KUNNR type kunnr,
+         name type kna1-name1,
+         sort1 type kna1-sortl,
+         city type ADDR1_DATA-CITY1,
+         country type ADDR1_DATA-COUNTRY,
+         zone type ADDR1_DATA-TRANSPZONE,
+
+       end of ty_final.
+
+DATA:   BDCDATA LIKE BDCDATA    OCCURS 0 WITH HEADER LINE.
+*       messages of call transaction
+DATA:   MESSTAB LIKE BDCMSGCOLL OCCURS 0 WITH HEADER LINE.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+       I_LINE_HEADER        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+  loop at it_final into wa_final."15
+
+perform bdc_dynpro      using 'SAPMF02D' '0100'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'RF02D-KTOKD'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'RF02D-KUNNR'
+                              wa_final-kunnr.
+perform bdc_field       using 'RF02D-KTOKD'
+                              '0001'.
+perform bdc_dynpro      using 'SAPMF02D' '0110'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'KNA1-TELX1'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'KNA1-NAME1'
+                              wa_final-name.
+perform bdc_field       using 'KNA1-SORTL'
+                              wa_final-sort1.
+
+perform bdc_field       using 'KNA1-ORT01'
+                              wa_final-city.
+perform bdc_field       using 'KNA1-LAND1'
+                              WA_FINAL-country.
+perform bdc_field       using 'KNA1-SPRAS'
+                              'EN'.
+perform bdc_field       using 'KNA1-PSTLZ'
+                              '555555'.
+perform bdc_dynpro      using 'SAPMF02D' '0120'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'KNA1-LOCCO'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'KNA1-LZONE'
+                             wa_final-zone.
+perform bdc_dynpro      using 'SAPMF02D' '0125'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'KNA1-NIELS'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '=UPDA'.
+
+
+CALL TRANSACTION 'XD01' USING BDCDATA MODE 'A' UPDATE 'L'.
+
+REFRESH BDCDATA.
+
+  endloop.
+
+****customer updation****  xd01
+
+
+
+FORM BDC_DYNPRO USING PROGRAM DYNPRO.
+  CLEAR BDCDATA.
+  BDCDATA-PROGRAM  = PROGRAM.
+  BDCDATA-DYNPRO   = DYNPRO.
+  BDCDATA-DYNBEGIN = 'X'.
+  APPEND BDCDATA.
+ENDFORM.
+
+*----------------------------------------------------------------------*
+*        Insert field                                                  *
+*----------------------------------------------------------------------*
+FORM BDC_FIELD USING FNAM FVAL.
+
+    CLEAR BDCDATA.
+    BDCDATA-FNAM = FNAM.
+    BDCDATA-FVAL = FVAL.
+    APPEND BDCDATA.
+
+ENDFORM.
+
+
+
+
+
+
+
+
+
+
+
+report zneilpratik52.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         KUNNR type kunnr,
+         name type kna1-name1,
+         name2 type kna1-name2,
+         city type kna1-ort01,
+
+
+       end of ty_final.
+
+DATA:   BDCDATA LIKE BDCDATA    OCCURS 0 WITH HEADER LINE.
+*       messages of call transaction
+DATA:   MESSTAB LIKE BDCMSGCOLL OCCURS 0 WITH HEADER LINE.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+       I_LINE_HEADER        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+  loop at it_final into wa_final."15
+perform bdc_dynpro      using 'SAPMF02D' '0101'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'RF02D-D0110'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'RF02D-KUNNR'
+                              wa_final-kunnr.
+perform bdc_field       using 'RF02D-D0110'
+                              'X'.
+perform bdc_dynpro      using 'SAPMF02D' '0110'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'KNA1-NAME2'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '=UPDA'.
+*perform bdc_field       using 'KNA1-NAME1'
+*                              wa_final-name.
+*
+*perform bdc_field       using 'KNA1-NAME2'
+*                              wa_final-name2.
+
+perform bdc_field       using 'KNA1-ORT01'
+                              wa_final-city.
+
+call TRANSACTION 'XD02' USING BDCDATA mode 'N' update 'L'.
+
+REFRESH BDCDATA.
+
+  endloop.
+
+****customer updation****  xd01
+
+
+
+FORM BDC_DYNPRO USING PROGRAM DYNPRO.
+  CLEAR BDCDATA.
+  BDCDATA-PROGRAM  = PROGRAM.
+  BDCDATA-DYNPRO   = DYNPRO.
+  BDCDATA-DYNBEGIN = 'X'.
+  APPEND BDCDATA.
+ENDFORM.
+
+*----------------------------------------------------------------------*
+*        Insert field                                                  *
+*----------------------------------------------------------------------*
+FORM BDC_FIELD USING FNAM FVAL.
+
+    CLEAR BDCDATA.
+    BDCDATA-FNAM = FNAM.
+    BDCDATA-FVAL = FVAL.
+    APPEND BDCDATA.
+
+ENDFORM.
+
+
+
+
+
+
+
+
+report zneilpratik53.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         kunnr   type kunnr,
+         name    type kna1-name1,
+         sort1   type kna1-sortl,
+         city    type addr1_data-city1,
+         country type addr1_data-country,
+         zone    type addr1_data-transpzone,
+
+       end of ty_final,
+       begin of ty_message,
+         kunnr    type kunnr,
+         message  type c length 255,
+         message1 type c length 255,
+       end of ty_message.
+data:it_mess type table of ty_message,
+     wa_mess type ty_message.
+data:   bdcdata like bdcdata    occurs 0 with header line."
+*       messages of call transaction
+data: messtab    like bdcmsgcoll occurs 0 with header line,
+      wa_messtab type bdcmsgcoll . " table with headline
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+      i_line_header        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+  loop at it_final into wa_final."15
+
+    perform bdc_dynpro      using 'SAPMF02D' '0100'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'RF02D-KTOKD'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    perform bdc_field       using 'RF02D-KUNNR'
+                                  wa_final-kunnr.
+    perform bdc_field       using 'RF02D-KTOKD'
+                                  '0001'.
+    perform bdc_dynpro      using 'SAPMF02D' '0110'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-TELX1'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    perform bdc_field       using 'KNA1-NAME1'
+                                  wa_final-name.
+    perform bdc_field       using 'KNA1-SORTL'
+                                  wa_final-sort1.
+
+    perform bdc_field       using 'KNA1-ORT01'
+                                  wa_final-city.
+    perform bdc_field       using 'KNA1-LAND1'
+                                  wa_final-country.
+    perform bdc_field       using 'KNA1-SPRAS'
+                                  'EN'.
+    perform bdc_field       using 'KNA1-PSTLZ'
+                                  '555555'.
+    perform bdc_dynpro      using 'SAPMF02D' '0120'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-LOCCO'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    if  wa_final-zone is not INITIAL.
+    perform bdc_field       using 'KNA1-LZONE'
+                                 wa_final-zone.
+
+    endif.
+    perform bdc_dynpro      using 'SAPMF02D' '0125'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-NIELS'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '=UPDA'.
+
+
+    call transaction 'XD01' using bdcdata mode 'N' update 'L' messages into messtab."messtab  will have error messages
+    if sy-subrc <> 0.
+
+      wa_mess-kunnr = wa_final-kunnr.
+      read table messtab into wa_messtab with key msgtyp = 'E'. "
+      if sy-subrc = 0.
+        call function 'FORMAT_MESSAGE'
+          exporting
+            id        = wa_messtab-msgid
+            lang      = sy-langu
+            no        = wa_messtab-msgnr
+            v1        = wa_messtab-msgv1
+            v2        = wa_messtab-msgv2
+            v3        = wa_messtab-msgv3
+            v4        = wa_messtab-msgv4
+          importing
+            msg       = wa_mess-message
+          exceptions
+            not_found = 1
+            others    = 2.
+        if sy-subrc = 0.
+* Implement suitable error handling here
+          delete messtab   index 1.
+        endif.
+      endif.
+      read table messtab into wa_messtab with key msgtyp = 'E'. "
+      if sy-subrc = 0.
+        call function 'FORMAT_MESSAGE'
+          exporting
+            id        = wa_messtab-msgid
+            lang      = sy-langu
+            no        = wa_messtab-msgnr
+            v1        = wa_messtab-msgv1
+            v2        = wa_messtab-msgv2
+            v3        = wa_messtab-msgv3
+            v4        = wa_messtab-msgv4
+          importing
+            msg       = wa_mess-message1
+          exceptions
+            not_found = 1
+            others    = 2.
+        if sy-subrc = 0.
+* Implement suitable error handling here
+*          delete messtab   index 1.
+        endif.
+
+      endif.
+
+      append wa_mess to it_mess.
+    endif.
+
+    refresh: bdcdata,messtab.
+
+  endloop.
+
+
+  loop at it_mess into wa_mess.
+
+    write:/ wa_mess-kunnr,wa_mess-message color 3,wa_mess-message1 color 6.
+  endloop.
+****customer updation****  xd01
+
+
+
+form bdc_dynpro using program dynpro.
+  clear bdcdata.
+  bdcdata-program  = program.
+  bdcdata-dynpro   = dynpro.
+  bdcdata-dynbegin = 'X'.
+  append bdcdata.
+endform.
+
+*----------------------------------------------------------------------*
+*        Insert field                                                  *
+*----------------------------------------------------------------------*
+form bdc_field using fnam fval.
+
+  clear bdcdata.
+  bdcdata-fnam = fnam.
+  bdcdata-fval = fval.
+  append bdcdata.
+
+endform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+report zneilpratik54.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         kunnr   type kunnr,
+         name    type kna1-name1,
+         sort1   type kna1-sortl,
+         city    type addr1_data-city1,
+         country type addr1_data-country,
+         zone    type addr1_data-transpzone,
+
+       end of ty_final.
+
+data:   bdcdata like bdcdata    occurs 0 with header line.
+*       messages of call transaction
+data:   messtab like bdcmsgcoll occurs 0 with header line.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+      i_line_header        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+
+  call function 'BDC_OPEN_GROUP'
+    exporting
+      client = sy-mandt
+*     DEST   = FILLER8
+      group  = 'NEILPRATIK'
+*     HOLDDATE                  = FILLER8
+      keep   = 'X'
+      user   = sy-uname
+*     RECORD = FILLER1
+*     PROG   = SY-CPROG
+*     DCPFM  = '%'
+*     DATFM  = '%'
+*   IMPORTING
+*     QID    =
+*   EXCEPTIONS
+*     CLIENT_INVALID            = 1
+*     DESTINATION_INVALID       = 2
+*     GROUP_INVALID             = 3
+*     GROUP_IS_LOCKED           = 4
+*     HOLDDATE_INVALID          = 5
+*     INTERNAL_ERROR            = 6
+*     QUEUE_ERROR               = 7
+*     RUNNING                   = 8
+*     SYSTEM_LOCK_ERROR         = 9
+*     USER_INVALID              = 10
+*     OTHERS = 11
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+
+  loop at it_final into wa_final."15
+
+    perform bdc_dynpro      using 'SAPMF02D' '0100'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'RF02D-KTOKD'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    perform bdc_field       using 'RF02D-KUNNR'
+                                  wa_final-kunnr.
+    perform bdc_field       using 'RF02D-KTOKD'
+                                  '0001'.
+    perform bdc_dynpro      using 'SAPMF02D' '0110'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-TELX1'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    perform bdc_field       using 'KNA1-NAME1'
+                                  wa_final-name.
+    perform bdc_field       using 'KNA1-SORTL'
+                                  wa_final-sort1.
+
+    perform bdc_field       using 'KNA1-ORT01'
+                                  wa_final-city.
+    perform bdc_field       using 'KNA1-LAND1'
+                                  wa_final-country.
+    perform bdc_field       using 'KNA1-SPRAS'
+                                  'EN'.
+    perform bdc_field       using 'KNA1-PSTLZ'
+                                  '555555'.
+    perform bdc_dynpro      using 'SAPMF02D' '0120'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-LOCCO'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '/00'.
+    perform bdc_field       using 'KNA1-LZONE'
+                                 wa_final-zone.
+    perform bdc_dynpro      using 'SAPMF02D' '0125'.
+    perform bdc_field       using 'BDC_CURSOR'
+                                  'KNA1-NIELS'.
+    perform bdc_field       using 'BDC_OKCODE'
+                                  '=UPDA'.
+
+*
+*CALL TRANSACTION 'XD01' USING BDCDATA MODE 'A' UPDATE 'L'.
+
+
+    call function 'BDC_INSERT'
+      exporting
+        tcode     = 'XD01'
+*       POST_LOCAL             = NOVBLOCAL
+*       PRINTING  = NOPRINT
+*       SIMUBATCH = ' '
+*       CTUPARAMS = ' '
+      tables
+        dynprotab = bdcdata
+* EXCEPTIONS
+*       INTERNAL_ERROR         = 1
+*       NOT_OPEN  = 2
+*       QUEUE_ERROR            = 3
+*       TCODE_INVALID          = 4
+*       PRINTING_INVALID       = 5
+*       POSTING_INVALID        = 6
+*       OTHERS    = 7
+      .
+    if sy-subrc <> 0.
+* Implement suitable error handling here
+    endif.
+
+    refresh bdcdata.
+
+  endloop.
+
+
+  call function 'BDC_CLOSE_GROUP'.
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+****customer updation****  xd01
+
+
+
+form bdc_dynpro using program dynpro.
+  clear bdcdata.
+  bdcdata-program  = program.
+  bdcdata-dynpro   = dynpro.
+  bdcdata-dynbegin = 'X'.
+  append bdcdata.
+endform.
+
+*----------------------------------------------------------------------*
+*        Insert field                                                  *
+*----------------------------------------------------------------------*
+form bdc_field using fnam fval.
+
+  clear bdcdata.
+  bdcdata-fnam = fnam.
+  bdcdata-fval = fval.
+  append bdcdata.
+
+endform.
+
+
+
+
+
+
+
+
+
+
+report zneilpratik55.
+
+parameters: pfile type ibipparms-path.
+
+types: begin of ty_final,
+         KUNNR type kunnr,
+         lifnr type lifnr,
+         name type kna1-name1,
+         name2 type kna1-name2,
+         city type kna1-ort01,
+
+
+       end of ty_final.
+
+DATA:   BDCDATA LIKE BDCDATA    OCCURS 0 WITH HEADER LINE.
+*       messages of call transaction
+DATA:   MESSTAB LIKE BDCMSGCOLL OCCURS 0 WITH HEADER LINE.
+
+data: it_final type table of ty_final,
+      wa_final type ty_final.
+data: it_raw type  truxs_t_text_data.
+
+at selection-screen on value-request for pfile.
+
+  call function 'F4_FILENAME'
+    exporting
+      program_name = sy-repid
+      field_name   = 'PFILE'
+    importing
+      file_name    = pfile.
+
+
+start-of-selection.
+
+  call function 'TEXT_CONVERT_XLS_TO_SAP'
+    exporting
+*     I_FIELD_SEPERATOR    =
+       I_LINE_HEADER        = 'X'
+      i_tab_raw_data       = it_raw
+      i_filename           = pfile
+    tables
+      i_tab_converted_data = it_final " CONVERTED DATA
+*  EXCEPTIONS
+*     CONVERSION_FAILED    = 1
+*     OTHERS               = 2
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+
+ call function 'BDC_OPEN_GROUP'
+    exporting
+      client = sy-mandt
+*     DEST   = FILLER8
+      group  = 'NCOMB'
+*     HOLDDATE                  = FILLER8
+      keep   = 'X'
+      user   = sy-uname
+*     RECORD = FILLER1
+*     PROG   = SY-CPROG
+*     DCPFM  = '%'
+*     DATFM  = '%'
+*   IMPORTING
+*     QID    =
+*   EXCEPTIONS
+*     CLIENT_INVALID            = 1
+*     DESTINATION_INVALID       = 2
+*     GROUP_INVALID             = 3
+*     GROUP_IS_LOCKED           = 4
+*     HOLDDATE_INVALID          = 5
+*     INTERNAL_ERROR            = 6
+*     QUEUE_ERROR               = 7
+*     RUNNING                   = 8
+*     SYSTEM_LOCK_ERROR         = 9
+*     USER_INVALID              = 10
+*     OTHERS = 11
+    .
+  if sy-subrc <> 0.
+* Implement suitable error handling here
+  endif.
+
+  loop at it_final into wa_final."15
+perform bdc_dynpro      using 'SAPMF02D' '0101'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'RF02D-D0110'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'RF02D-KUNNR'
+                              wa_final-kunnr.
+perform bdc_field       using 'RF02D-D0110'
+                              'X'.
+perform bdc_dynpro      using 'SAPMF02D' '0110'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'KNA1-NAME2'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '=UPDA'.
+perform bdc_field       using 'KNA1-NAME1'
+                              wa_final-name.
+
+perform bdc_field       using 'KNA1-NAME2'
+                              wa_final-name2.
+
+perform bdc_field       using 'KNA1-ORT01'
+                              wa_final-city.
+
+*call TRANSACTION 'XD02' USING BDCDATA mode 'N' update 'L'.
+call function 'BDC_INSERT'
+ EXPORTING
+   TCODE                  = 'XD02'
+*   POST_LOCAL             = NOVBLOCAL
+*   PRINTING               = NOPRINT
+*   SIMUBATCH              = ' '
+*   CTUPARAMS              = ' '
+  tables
+    dynprotab              =  BDCDATA
+* EXCEPTIONS
+*   INTERNAL_ERROR         = 1
+*   NOT_OPEN               = 2
+*   QUEUE_ERROR            = 3
+*   TCODE_INVALID          = 4
+*   PRINTING_INVALID       = 5
+*   POSTING_INVALID        = 6
+*   OTHERS                 = 7
+          .
+if sy-subrc <> 0.
+* Implement suitable error handling here
+endif.
+
+REFRESH BDCDATA.
+
+
+
+************XK02******************
+
+
+
+perform bdc_dynpro      using 'SAPMF02K' '0101'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'RF02K-D0110'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '/00'.
+perform bdc_field       using 'RF02K-LIFNR'
+                              wa_final-lifnr.
+perform bdc_field       using 'RF02K-D0110'
+                              'X'.
+perform bdc_dynpro      using 'SAPMF02K' '0110'.
+perform bdc_field       using 'BDC_CURSOR'
+                              'LFA1-ORT01'.
+perform bdc_field       using 'BDC_OKCODE'
+                              '=UPDA'.
+perform bdc_field       using 'LFA1-NAME1'
+                              wa_final-name.
+
+perform bdc_field       using 'LFA1-NAME2'
+                              wa_final-name2.
+
+perform bdc_field       using 'LFA1-ORT01'
+                              wa_final-city.
+
+call function 'BDC_INSERT'
+ EXPORTING
+   TCODE                  = 'XK02'
+*   POST_LOCAL             = NOVBLOCAL
+*   PRINTING               = NOPRINT
+*   SIMUBATCH              = ' '
+*   CTUPARAMS              = ' '
+  tables
+    dynprotab              =  BDCDATA
+* EXCEPTIONS
+*   INTERNAL_ERROR         = 1
+*   NOT_OPEN               = 2
+*   QUEUE_ERROR            = 3
+*   TCODE_INVALID          = 4
+*   PRINTING_INVALID       = 5
+*   POSTING_INVALID        = 6
+*   OTHERS                 = 7
+          .
+if sy-subrc <> 0.
+* Implement suitable error handling here
+endif.
+
+REFRESH BDCDATA.
+
+  endloop.
+call function 'BDC_CLOSE_GROUP'
+* EXCEPTIONS
+*   NOT_OPEN          = 1
+*   QUEUE_ERROR       = 2
+*   OTHERS            = 3
+          .
+if sy-subrc <> 0.
+* Implement suitable error handling here
+endif.
+
+****customer updation****  xd01
+
+
+
+FORM BDC_DYNPRO USING PROGRAM DYNPRO.
+  CLEAR BDCDATA.
+  BDCDATA-PROGRAM  = PROGRAM.
+  BDCDATA-DYNPRO   = DYNPRO.
+  BDCDATA-DYNBEGIN = 'X'.
+  APPEND BDCDATA.
+ENDFORM.
+
+*----------------------------------------------------------------------*
+*        Insert field                                                  *
+*----------------------------------------------------------------------*
+FORM BDC_FIELD USING FNAM FVAL.
+
+    CLEAR BDCDATA.
+    BDCDATA-FNAM = FNAM.
+    BDCDATA-FVAL = FVAL.
+    APPEND BDCDATA.
+
+ENDFORM.
