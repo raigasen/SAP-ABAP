@@ -1,0 +1,252 @@
+ZNEILPRATIK1
+
+REPORT ZNEILPRATIK1.
+PARAMETERS:a type C length 2," user input  " CHaracter integer
+           b type c length 2,
+           d type ZOPERATORNEW," user input  "DATAELEMnt TYPE
+           e type Z24_AGENT_TABLE-AGENTCODE,
+           f type zAGENTCODE.
+
+DATA: c type c LENGTH 4.
+
+*c = a + b.
+*
+*Write:'Addition of ',a,b ,'IS', C.
+
+if D = '+'.
+c = a + b.
+
+Write:'Addition of ',a,b ,'IS', C.
+  ELSEIF D = '-'.
+c = a - b.
+
+Write:'Sub of ',a,b ,'IS', C.
+    ELSEIF d = '*'.
+c = a * b.
+
+Write:'Mul of ',a,b ,'IS', C.
+
+      elseif d = '/'.
+c = a / b.
+
+Write:'Div of ',a,b ,'IS', C.
+        else.
+MESSAGE 'PLease select COrrect operator' type 'I'."i Infor   E error A -abbort  S Success
+          endif.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK2.
+PARAMETERS:a type C length 2," user input  " CHaracter integer
+           b type c length 2,
+           d type ZOPERATORNEW," user input  "DATAELEMnt TYPE
+           e type Z24_AGENT_TABLE-AGENTCODE,
+           f type zAGENTCODE.
+
+DATA: c type c LENGTH 4.
+
+*c = a + b.
+*
+*Write:'Addition of ',a,b ,'IS', C.
+CASE d.
+when '+'.
+c = a + b.
+
+Write:'Addition of ',a,b ,'IS', C.
+  when  '-'.
+c = a - b.
+
+Write:'Sub of ',a,b ,'IS', C.
+ when '*'.
+c = a * b.
+
+Write:'Mul of ',a,b ,'IS', C.
+
+     when  '/'.
+c = a / b.
+
+Write:'Div of ',a,b ,'IS', C.
+      when others.
+MESSAGE 'PLease select COrrect operator' type 'I'."i Infor   E error A -abbort  S Success
+         endcase.
+
+
+
+
+
+
+
+3
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK3
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK3.
+
+
+PARAMETERS: v1 type i.
+
+
+
+*DO V1 times.
+*
+*  WRITE:/ SY-index, Sy-datum,Sy-uname,SY-uzeit.
+*
+*
+*
+*
+*  enddo.
+
+
+
+  DO .
+    if SY-index < v1.
+    WRITE:/ SY-index, Sy-datum,Sy-uname,SY-uzeit.
+
+    else.
+      exit.
+      endif.
+
+    enddo.
+
+
+
+
+
+4
+REPORT ZNEILPRATIK4.
+
+PARAMETERS: p1 type i.
+
+
+while SY-index <= p1.
+
+  Write: sy-index.
+
+  ENDWHILE.
+
+
+
+
+
+5
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK5
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik5.
+
+*PARAMETERS:  used for user input
+
+**DATA*   to hold data in program
+
+types:begin of ty_student," ty_student is name of structure
+        name    type c length 10,
+        sirname type c length 20,
+        mob     type n length 10, " fields of strucutre
+
+      end of ty_student.
+
+
+data: wa type ty_student. " name sirname and mob workarea single record
+data: it type table of ty_student."internal table multiple record
+
+wa-name = 'Neil'.
+wa-sirname = 'Prateek'.
+wa-mob = '909090'.
+
+append  wa to it.
+
+
+wa-name = 'Neil1'.
+wa-sirname = 'Prateek1'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-name = 'Neil2'.
+wa-sirname = 'Prateek2'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+wa-name = 'Neil3'.
+wa-sirname = 'Prateek3'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+
+loop at it into wa.
+
+  write: / wa-name color 3 ,wa-sirname color 4,wa-mob color 5.
+
+endloop.
+
+
+
+
+
+
+6
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK6
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik6.
+
+types:begin of ty_mara,
+
+        mandt type  mandt,
+        matnr	type matnr,
+        ersda	type ersda,
+        ernam	type mara-ernam,
+        laeda type  laeda,
+        aenam type aenam,
+      end of ty_mara.
+
+
+data: wa_mara type ty_mara,
+      it_mara type table of ty_mara.
+
+
+select mandt matnr ersda ernam laeda aenam from MARA into table  it_mara up to 50 rows.
+
+  loop at it_mara into wa_mara." loop at internal table into work area
+
+    write : / sy-tabix,wa_mara-mandt,
+            wa_mara-matnr,
+            wa_mara-ersda,
+            wa_mara-ernam,
+            wa_mara-laeda,
+            wa_mara-aenam.
+
+    endloop.

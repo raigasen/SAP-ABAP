@@ -1,0 +1,489 @@
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS8
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS11.
+class atul2 DEFINITION DEFERRED.
+
+CLASS atul DEFINITION FRIENDS atul2 .
+  PUBLIC SECTION.
+
+  METHODS:M1 .
+    PROTECTED SECTION.
+  methods M2.
+
+  PRIVATE SECTION.
+  methods M3.
+
+
+  ENDCLASS .
+
+  CLASS ATUL IMPLEMENTATION.
+    METHOD M1.
+      WRITE : /  'INSIDE M1'.
+
+      ENDMETHOD.
+
+          METHOD M2.
+      WRITE : /  'INSIDE M2'.
+      ENDMETHOD.
+
+          METHOD M3.
+      WRITE : /  'INSIDE M3'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+
+    CLASS atul2 DEFINITION INHERITING FROM atul.
+      PUBLIC SECTION.
+
+  METHODS:M4 , M5 , M6.
+
+      ENDCLASS.
+
+
+        CLASS ATUL2 IMPLEMENTATION.
+    METHOD M4.
+
+
+      WRITE : /  'INSIDE M4'.
+      ENDMETHOD.
+
+          METHOD M5.
+      WRITE : /  'INSIDE M5'.
+      ENDMETHOD.
+
+          METHOD M6.
+      WRITE : /  'INSIDE M6'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+
+    CLASS atul3 DEFINITION INHERITING FROM atul2.
+      PUBLIC SECTION.
+
+  METHODS:M7 , M8 , M9.
+
+      ENDCLASS.
+
+
+        CLASS ATUL3 IMPLEMENTATION.
+    METHOD M7.
+  DATA:ob type ref to atul.
+      create object ob.
+      ob->m2( ).
+        ob->m3( ).
+      WRITE : /  'INSIDE M7'.
+      ENDMETHOD.
+
+          METHOD M8.
+      WRITE : /  'INSIDE M8'.
+      ENDMETHOD.
+
+          METHOD M9.
+      WRITE : /  'INSIDE M9'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+    START-OF-SELECTION.
+    data: OB TYPE REF TO ATUL3.
+    CREATE OBJECT OB.
+
+        OB->M1( ).
+*        OB->M2( ).
+*        OB->M3( ).
+        OB->M4( ).
+        OB->M5( ).
+        OB->M6( ).
+        OB->M7( ).
+        OB->M8( ).
+        OB->M9( ).
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS12.
+
+    data: OB TYPE REF TO ZCL_ATUL2.
+    CREATE OBJECT OB.
+
+        OB->M4( ).
+        OB->M5( ).
+         OB->M6( ).
+
+
+
+
+
+
+
+
+REPORT ZATUL_OOPS13.
+
+
+data: OB TYPE REF TO ZCL_ATUL5.
+    CREATE OBJECT OB.
+
+        OB->M1( ).
+*        OB->M2( ).
+*        OB->M3( ).
+        OB->M4( ).
+        OB->M5( ).
+        OB->M6( ).
+        OB->M7( ).
+        OB->M8( ).
+        OB->M9( ).
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS15
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zatul_oops15.
+
+class atul definition.
+  public section.
+    methods:display,constructor.
+  protected section.
+    data:ename(20),enu type i.
+
+
+endclass.
+
+class atul implementation.
+  method display.
+    write:/ enu,ename.
+  endmethod.
+
+  method constructor.
+    enu = 4.
+    ename = 'Atul'.
+  endmethod.
+
+
+endclass.
+
+
+
+start-of-selection.
+
+  data:ob type ref to atul.
+
+  create object ob.
+
+  ob->display( ).
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS15
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zatul_oops16.
+
+class atul definition.
+  public section.
+    methods:display,constructor IMPORTING imatnr type matnr .
+  protected section.
+    data:mara type mara.
+
+
+endclass.
+
+class atul implementation.
+  method display.
+           write:/ mara-mandt,
+                  mara-matnr,
+                  mara-ersda,
+                  mara-ernam,
+                  mara-laeda,
+                  mara-aenam,
+                  mara-vpsta,
+                  mara-pstat,
+                  mara-lvorm,
+                  mara-mtart.
+
+  endmethod.
+
+  method constructor.
+
+    select single * from mara into mara WHERE matnr = imatnr.
+  endmethod.
+
+
+endclass.
+
+PARAMETERS:pmatnr type matnr.
+
+start-of-selection.
+
+  data:ob type ref to atul.
+
+
+create OBJECT ob
+  exporting
+    imatnr = pmatnr
+  .
+  ob->display( ).
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS17
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zatul_oops17.
+class atul definition.
+  public section.
+
+    methods:constructor.
+    class-methods: class_constructor.
+    class-data: lv type i.
+
+
+endclass.
+
+
+class atul implementation.
+  method constructor.
+
+    write:/ 'inside constructor method' color 3.
+  endmethod.
+
+
+  method class_constructor.
+
+    write:/ 'inside class constructor method' color 5.
+
+  endmethod.
+
+endclass.
+
+START-OF-SELECTION.
+
+atul=>lv = 1."" static attibute
+
+DATA: ob TYPE  REF TO atul.
+CREATE object ob.
+
+
+
+
+DATA: ob1 TYPE  REF TO atul.
+CREATE object ob1.
+
+
+
+
+DATA: ob2 TYPE  REF TO atul.
+CREATE object ob2.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS18
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zatul_oops18.
+
+
+class atul definition.
+
+  public section.
+    methods :constructor.
+    methods: m1,m2,m3.
+
+
+endclass.
+
+class atul implementation.
+
+  method constructor.
+    write:/ 'Inside Method constructor of atul class' color 4.
+  endmethod.
+  method m1.
+    write:/ 'Inside Method m1 for parent class atul' color 1.
+  endmethod.
+
+  method m2.
+
+    write:/ 'Inside Method m2' color 2.
+  endmethod.
+
+  method m3.
+
+    write:/ 'Inside Method m3' color 3.
+  endmethod.
+endclass.
+
+
+class atul2 definition inheriting from atul.
+  public section.
+    methods:constructor.
+    methods: m1 redefinition , m4.
+
+endclass.
+
+
+class atul2 implementation.
+  method constructor.
+    super->constructor( ).
+
+    write:/ 'Inside Method constructor of atul2 class' color 5.
+  endmethod.
+  method m4.
+
+    write:/ 'Inside Method m4' color 4.
+  endmethod.
+  method m1.
+    super->m1( ).
+    write:/ 'Inside Method m1 for child class atul2' color 4.
+  endmethod.
+endclass.
+
+
+start-of-selection.
+
+  data: ob type  ref to atul2.
+  create object ob.
+
+  ob->m1( ). " child
+
+  ob->m2( ).
+
+  ob->m3( ).
+  ob->m4( ).
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS18
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zatul_oops20.
+
+
+class atul definition.
+
+  public section.
+    methods :constructor.
+    methods: m1,m2,m3.
+
+
+endclass.
+
+class atul implementation.
+
+  method constructor.
+    write:/ 'Inside Method constructor of atul class' color 4.
+  endmethod.
+  method m1.
+    write:/ 'Inside Method m1 for parent class atul' color 1.
+  endmethod.
+
+  method m2.
+
+    write:/ 'Inside Method m2' color 2.
+  endmethod.
+
+  method m3.
+
+    write:/ 'Inside Method m3' color 3.
+  endmethod.
+endclass.
+
+
+class atul2 definition inheriting from atul.
+  public section.
+    methods:constructor.
+    methods: m1 redefinition  , m4.
+
+endclass.
+
+
+class atul2 implementation.
+  method constructor.
+    super->constructor( ).
+
+    write:/ 'Inside Method constructor of atul2 class' color 5.
+  endmethod.
+  method m4.
+
+    write:/ 'Inside Method m4' color 4.
+  endmethod.
+  method m1.
+    super->m1( )."" parent class
+    write:/ 'Inside Method m1 for child class atul2' color 4.
+  endmethod.
+endclass.
+
+
+start-of-selection.
+
+  data: ob type  ref to atul2.
+  create object ob.
+
+  ob->m1( ). " child
+
+  ob->m2( ).
+
+  ob->m3( ).
+  ob->m4( ).
+
+
+
+
+
