@@ -1,0 +1,682 @@
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS1
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS1.
+
+CLASS atul DEFINITION.
+  PUBLIC SECTION.
+  CONSTANTS:lc type c  VALUE '1'.
+  DATA: lv1 type c LENGTH 15. " instance
+  CLASS-DATA:lv2 type c LENGTH 15. " static
+
+
+  endclass.
+
+DATA:ob type ref to ATUL.
+
+create object ob."" atul
+ob->lv1 = 'ATULINSTANCE'.
+  write atul=>lc.
+*  atul=>lv1 = 'ATUL'.
+  atul=>lv2 = 'ATULSTATIC'.
+
+  write: ob->lv2  " static  -> instance   => static
+  , ob->lv1 .
+
+
+DATA:ob2 type ref to atul.
+
+create object ob2."" atul
+
+  ob2->lv1 =  'second object'.
+  write : / atul=>lc.
+*  atul=>lv1 = 'ATUL'.
+*  atul=>lv2 = 'ATULSTATIC'.
+
+  write: / ob2->lv2  " static  -> instance   => static
+  , ob2->lv1 .
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS2.
+
+class atul DEFINITION.
+
+  PUBLIC SECTION.
+
+  methods: set ,display.
+*  PROTECTED SECTION.
+  DATA:empno type i,
+      ename(20) type c.
+
+
+  ENDCLASS.
+
+
+  class atul IMPLEMENTATION.
+    method set.
+   empno = 10.
+   ename = 'atul'.
+      endmethod.
+
+      method display.
+
+write:/ empno,ename.
+        endmethod.
+
+    ENDCLASS.
+
+START-OF-SELECTION.
+data: ob type REF TO atul.
+CREATE object ob.
+
+ob->set( ).
+
+call METHOD ob->display.
+
+ob->empno = 20.
+ob->ename = 'ATULinstance2'.
+
+call METHOD ob->display.
+
+
+ob->empno = 30.
+ob->ename = 'ATULinstance3'.
+
+call METHOD ob->display.
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS3.
+
+class atul DEFINITION.
+
+  PUBLIC SECTION.
+
+  methods: display.
+  PROTECTED SECTION.
+    methods: set.
+  DATA:empno type i,
+      ename(20) type c.
+
+
+  ENDCLASS.
+
+
+  class atul IMPLEMENTATION.
+    method set.
+   empno = 10.
+   ename = 'atul'.
+      endmethod.
+
+      method display.
+me->set( ).""me keyword
+
+write:/ empno,ename.
+
+me->empno = 20.
+
+me->ename = 'atul4'.
+write:/ me->empno,me->ename.
+        endmethod.
+
+    ENDCLASS.
+
+START-OF-SELECTION.
+data: ob type REF TO atul.
+CREATE object ob.
+
+*ob->set( ).
+
+call METHOD ob->display.
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS4.
+
+class atul DEFINITION.
+
+  PUBLIC SECTION.
+
+  methods: display IMPORTING IMATNR TYPE MATNR.
+
+    methods: set IMPORTING imatnr type matnr EXPORTING emaktx type maktx.
+
+
+
+  ENDCLASS.
+
+
+  class atul IMPLEMENTATION.
+    method set.
+   select SINGLE maktx from makt INto emaktx WHERE matnr = imatnr AND SPRAS = 'E'.
+      endmethod.
+
+      method display.
+        data:EMAKTX TYPE MAKTX.
+
+        ME->SET(
+          exporting
+            IMATNR =  IMATNR
+          importing
+            EMAKTX = EMAKTX
+        ).
+
+        WRITE:IMATNR,EMAKTX.
+
+
+        endmethod.
+
+    ENDCLASS.
+PARAMETERS: PMATNR TYPE MATNR.
+START-OF-SELECTION.
+data: ob type REF TO atul.
+CREATE object ob.
+
+OB->DISPLAY( IMATNR = PMATNR ).
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS5
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS5.
+
+class ATUL DEFINITION.
+  PUBLIC SECTION.
+  METHODS GET_CUSTOMER IMPORTING IKUNNR TYPE   KUNNR OPTIONAL  EXPORTING ENAME TYPE KNA1-NAME1 EORT01 TYPE KNA1-ORT01.
+
+
+  ENDCLASS.
+
+  CLASS ATUL IMPLEMENTATION.
+METHOD GET_CUSTOMER.
+  SELECT SINGLE NAME1 ORT01 FROM KNA1 INTO (ename,eort01) WHERE KUNNR = IKUNNR.
+
+  ENDMETHOD.
+
+    ENDCLASS.
+
+
+    START-OF-SELECTION.
+
+    data: OB TYPE REF TO ATUL.
+    CREATE OBJECT OB.
+
+    PARAMETERS:P_KUNNR TYPE KNA1-KUNNR.
+
+    data:VNAME TYPE KNA1-NAME1,
+          VORT01 TYPE KNA1-ORT01.
+
+    OB->GET_CUSTOMER(
+      exporting
+        IKUNNR = P_KUNNR
+
+    ).
+
+    FORMAT COLOR 3.
+    write:/ VNAME,VORT01.
+
+    FORMAT COLOR OFF.
+
+
+
+       OB->GET_CUSTOMER(
+         exporting
+           IKUNNR = P_KUNNR
+         importing
+           ENAME  = VNAME
+*           EORT01 =
+       ).
+
+
+
+    FORMAT COLOR 4.
+    write:/ VNAME,VORT01.
+
+    FORMAT COLOR OFF.
+
+
+
+
+       OB->GET_CUSTOMER(
+         exporting
+           IKUNNR = P_KUNNR
+         importing
+           ENAME  = VNAME
+           EORT01 = VORT01
+       ).
+
+
+
+    FORMAT COLOR 5.
+    write:/ VNAME,VORT01.
+
+    FORMAT COLOR OFF.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+REPORT ZATUL_OOPS6.
+CLASS ATUL DEFINITION.
+  PUBLIC SECTION.
+  METHODS M1.
+  CLASS-METHODS M2.
+
+
+
+  ENDCLASS.
+
+  CLASS ATUL IMPLEMENTATION.
+
+    METHOD M1.
+      WRITE:/ 'iNSIDE INNTANCE METHOD M1'.
+      M2( ).
+      ENDMETHOD .
+
+
+      METHOD M2.
+        WRITE:/ 'iNSIDE STATIC METHOD M2'.
+
+        ENDMETHOD.
+    ENDCLASS.
+
+
+    START-OF-SELECTION.
+
+
+DATA: OB TYPE REF TO ATUL.
+CREATE OBJECT OB.
+
+OB->M1( ).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS7
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS7.
+CLASS ATUL DEFINITION.
+  PUBLIC SECTION.
+  METHODS GET_NAME  IMPORTING IKUNNR TYPE KUNNR RETURNING VALUE(ENAME) TYPE KNA1-NAME1.
+
+  ENDCLASS.
+
+  CLASS ATUL IMPLEMENTATION.
+     METHOD GET_NAME .
+       SELECT SINGLE NAME1 FROM KNA1 INTO ENAME WHERE KUNNR = IKUNNR.
+
+
+     ENDMETHOD.
+    ENDCLASS.
+
+    START-OF-SELECTION.
+    data:OB TYPE REF TO ATUL.
+    CREATE OBJECT OB.
+
+    PARAMETERS: PKUNNR TYPE KUNNR.
+
+    data:VNAME1 TYPE KNA1-NAME1.
+
+
+    VNAME1 =  OB->GET_NAME( IKUNNR = PKUNNR  ).
+
+    WRITE:VNAME1.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS8
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS8.
+
+CLASS atul DEFINITION.
+  PUBLIC SECTION.
+
+  METHODS:M1 , M2 , M3.
+
+
+  ENDCLASS .
+
+  CLASS ATUL IMPLEMENTATION.
+    METHOD M1.
+      WRITE : /  'INSIDE M1'.
+      ENDMETHOD.
+
+          METHOD M2.
+      WRITE : /  'INSIDE M2'.
+      ENDMETHOD.
+
+          METHOD M3.
+      WRITE : /  'INSIDE M3'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+
+    CLASS atul2 DEFINITION.
+      PUBLIC SECTION.
+
+  METHODS:M4 , M5 , M6.
+
+      ENDCLASS.
+
+
+        CLASS ATUL2 IMPLEMENTATION.
+    METHOD M4.
+      data: OB TYPE REF TO ATUL.
+    CREATE OBJECT OB.
+
+        OB->M1( ).
+        OB->M2( ).
+        OB->M3( ).
+      WRITE : /  'INSIDE M4'.
+      ENDMETHOD.
+
+          METHOD M5.
+      WRITE : /  'INSIDE M5'.
+      ENDMETHOD.
+
+          METHOD M6.
+      WRITE : /  'INSIDE M6'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+    START-OF-SELECTION.
+    data: OB TYPE REF TO ATUL2.
+    CREATE OBJECT OB.
+
+        OB->M4( ).
+        OB->M5( ).
+         OB->M6( ).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS8
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS9.
+
+CLASS atul DEFINITION.
+  PUBLIC SECTION.
+
+  METHODS:M1 .
+    PROTECTED SECTION.
+  methods M2.
+
+  PRIVATE SECTION.
+  methods M3.
+
+
+  ENDCLASS .
+
+  CLASS ATUL IMPLEMENTATION.
+    METHOD M1.
+      WRITE : /  'INSIDE M1'.
+      m2( ).
+      m3( ).
+      ENDMETHOD.
+
+          METHOD M2.
+      WRITE : /  'INSIDE M2'.
+      ENDMETHOD.
+
+          METHOD M3.
+      WRITE : /  'INSIDE M3'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+
+    CLASS atul2 DEFINITION.
+      PUBLIC SECTION.
+
+  METHODS:M4 , M5 , M6.
+
+      ENDCLASS.
+
+
+        CLASS ATUL2 IMPLEMENTATION.
+    METHOD M4.
+      data: OB TYPE REF TO ATUL.
+    CREATE OBJECT OB.
+
+        OB->M1( ).
+*        OB->M2( ).
+*        OB->M3( ).
+      WRITE : /  'INSIDE M4'.
+      ENDMETHOD.
+
+          METHOD M5.
+      WRITE : /  'INSIDE M5'.
+      ENDMETHOD.
+
+          METHOD M6.
+      WRITE : /  'INSIDE M6'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+    START-OF-SELECTION.
+    data: OB TYPE REF TO ATUL2.
+    CREATE OBJECT OB.
+
+        OB->M4( ).
+        OB->M5( ).
+         OB->M6( ).
+
+*
+*            data: OB1 TYPE REF TO ATUL.
+*    CREATE OBJECT OB1.
+*
+*        OB1->M1( ).
+*        OB1->M2( ).
+*        OB1->M3( ).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZATUL_OOPS8
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZATUL_OOPS10.
+CLASS atul2 DEFINITION DEFERRED.
+CLASS atul DEFINITION FRIENDS atul2.
+  PUBLIC SECTION.
+
+  METHODS:M1 .
+    PROTECTED SECTION.
+  methods M2.
+
+  PRIVATE SECTION.
+  methods M3.
+
+
+  ENDCLASS .
+
+  CLASS ATUL IMPLEMENTATION.
+    METHOD M1.
+      WRITE : /  'INSIDE M1'.
+
+      ENDMETHOD.
+
+          METHOD M2.
+      WRITE : /  'INSIDE M2'.
+      ENDMETHOD.
+
+          METHOD M3.
+      WRITE : /  'INSIDE M3'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+
+    CLASS atul2 DEFINITION.
+      PUBLIC SECTION.
+
+  METHODS:M4 , M5 , M6.
+
+      ENDCLASS.
+
+
+        CLASS ATUL2 IMPLEMENTATION.
+    METHOD M4.
+      data: OB TYPE REF TO ATUL.
+    CREATE OBJECT OB.
+
+        OB->M1( ).
+        OB->M2( ).
+        OB->M3( ).
+      WRITE : /  'INSIDE M4'.
+      ENDMETHOD.
+
+          METHOD M5.
+      WRITE : /  'INSIDE M5'.
+      ENDMETHOD.
+
+          METHOD M6.
+      WRITE : /  'INSIDE M6'.
+      ENDMETHOD.
+
+    ENDCLASS.
+
+    START-OF-SELECTION.
+    data: OB TYPE REF TO ATUL2.
+    CREATE OBJECT OB.
+
+        OB->M4( ).
+        OB->M5( ).
+         OB->M6( ).
