@@ -1,0 +1,714 @@
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK36
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK36.
+ PARAMETERS:a type i,
+            b type i.
+
+
+* PERFORM ADD USING A B . " ACTUAL PARAMETER
+
+
+
+form SWAP USING x y.
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+form SWAP1 USING value(x) value(y).
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+
+
+
+
+
+
+
+
+
+*----------------------------------------------------------------------*
+form add  using    X   " formal parameter
+                   y.
+
+  DATA: Z type i.
+
+  z = x + y.
+  write Z.
+
+endform.
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK37
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK37.
+
+PARAMETERS: A type i,
+ b type i.
+format color 3.
+WRITE: / 'Values of A and B before swaping ' ,a ,b.
+*Perform SWAP IN PROGRAM ZNEILPRATIK36 using A B.
+
+Perform SWAP(ZNEILPRATIK36) using A B.
+WRITE: / 'Values of A and B after swaping ', a ,b.
+
+format color off.
+
+format color 6.
+A = 10 .
+b = 20.
+
+WRITE: / 'Values of A and B before swaping ' ,a ,b.
+*Perform SWAP1 IN PROGRAM ZNEILPRATIK36 using A B.
+
+Perform SWAP(ZNEILPRATIK36) using A B.
+WRITE: / 'Values of A and B after swaping ', a ,b.
+FORMAT color off.
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Subroutinenpool  ZNEILPRATIK38
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+PROGRAM ZNEILPRATIK38.
+
+
+
+form SWAP USING x y.
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+form SWAP1 USING value(x) value(y).
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*----------------------------------------------------------------------*
+form add  using    X   " formal parameter
+                   y.
+
+  DATA: Z type i.
+
+  z = x + y.
+  write Z.
+
+endform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****MOdularization
+*do 10 times.
+*  NEW-LINE.
+*Perform WRITE.
+*Perform WRITE1.
+*Perform WRITE2.
+*Perform WRITE3.
+*
+*enddo.
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*&---------------------------------------------------------------------*
+*&      Form  WRITE
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+form write .
+WRITE:'Test1' .
+
+endform.
+
+
+form write1 .
+WRITE:'Test2' .
+
+endform.
+
+
+form write2 .
+WRITE:'Test3' .
+
+endform.
+
+form write3 .
+WRITE:'Test4' .
+
+endform.
+*&---------------------------------------------------------------------*
+*&      Form  ADD
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_A  text
+*      -->P_B  text
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****MOdularization
+*do 10 times.
+*  NEW-LINE.
+*Perform WRITE.
+*Perform WRITE1.
+*Perform WRITE2.
+*Perform WRITE3.
+*
+*enddo.
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*&---------------------------------------------------------------------*
+*&      Form  WRITE
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+form write .
+WRITE:'Test1' .
+
+endform.
+
+
+form write1 .
+WRITE:'Test2' .
+
+endform.
+
+
+form write2 .
+WRITE:'Test3' .
+
+endform.
+
+form write3 .
+WRITE:'Test4' .
+
+endform.
+*&---------------------------------------------------------------------*
+*&      Form  ADD
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_A  text
+*      -->P_B  text
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK37
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK37.
+
+PARAMETERS: A type i,
+ b type i.
+format color 3.
+WRITE: / 'Values of A and B before swaping ' ,a ,b.
+*Perform SWAP IN PROGRAM ZNEILPRATIK36 using A B.
+
+Perform SWAP(ZNEILPRATIK36) using A B.
+WRITE: / 'Values of A and B after swaping ', a ,b.
+
+format color off.
+
+format color 6.
+A = 10 .
+b = 20.
+
+WRITE: / 'Values of A and B before swaping ' ,a ,b.
+*Perform SWAP1 IN PROGRAM ZNEILPRATIK36 using A B.
+
+Perform SWAP(ZNEILPRATIK36) using A B.
+WRITE: / 'Values of A and B after swaping ', a ,b.
+FORMAT color off.
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Subroutinenpool  ZNEILPRATIK38
+*&
+*&---------------------------------------------------------------------*
+*&
+*&
+*&---------------------------------------------------------------------*
+PROGRAM ZNEILPRATIK38.
+
+
+
+form SWAP USING x y.
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+form SWAP1 USING value(x) value(y).
+
+  DATA: Z type i.
+  z = x.
+  x = y.
+  y = z.
+
+
+  endform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*----------------------------------------------------------------------*
+form add  using    X   " formal parameter
+                   y.
+
+  DATA: Z type i.
+
+  z = x + y.
+  write Z.
+
+endform.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+****MOdularization
+*do 10 times.
+*  NEW-LINE.
+*Perform WRITE.
+*Perform WRITE1.
+*Perform WRITE2.
+*Perform WRITE3.
+*
+*enddo.
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*WRITE:'Test1' .
+*&---------------------------------------------------------------------*
+*&      Form  WRITE
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+form write .
+WRITE:'Test1' .
+
+endform.
+
+
+form write1 .
+WRITE:'Test2' .
+
+endform.
+
+
+form write2 .
+WRITE:'Test3' .
+
+endform.
+
+form write3 .
+WRITE:'Test4' .
+
+endform.
+*&---------------------------------------------------------------------*
+*&      Form  ADD
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_A  text
+*      -->P_B  text
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK39
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik39.
+
+parameters:p_werks type mard-werks,
+           p_lgort type mard-lgort.
+
+
+types : begin of ty_mard,
+
+          matnr type matnr,
+          maktx type maktx,
+        end of ty_mard.
+
+ DATA : it type  TABLE OF ty_mard .
+
+
+
+if p_werks is not initial.
+
+
+  if p_lgort is not initial .
+PERFORM GET_MATNR1  TABLES it USING p_werks p_lgort .
+
+  else.
+PERFORM GET_MATNR TABLES it USING p_werks .
+
+  endif.
+
+
+
+elseif p_lgort is not initial.
+
+PERFORM GET_MATNR2 TABLES it  USING p_lgort.
+
+else.
+
+
+MESSAGE 'Both plant and storage location can not be blank' type 'E'.
+endif.
+DESCRIBE TABLE IT LINES DATA(LV_LINES).
+WRITE: 'No of records', LV_LINES color 3.
+
+Loop at IT INTO DATA(wa).
+  NEW-line.
+  Write: wa-matnr,WA-maktx.
+
+  ENDLOOP.
+*&---------------------------------------------------------------------*
+*&      Form  GET_MATNR1
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_IT  text
+*      -->P_P_WERKS  text
+*      -->P_P_LGORT  text
+*----------------------------------------------------------------------*
+form get_matnr1  tables   p_it
+                            "Insert a correct name for <...>
+                 using    p1                          p2.
+
+  select mard~MATNR maktx from mard  INNER JOIN MAKT on MARD~matnr = MAKT~matnr into table p_it where werks = p1 and lgort = p2  and spras = 'E'.
+
+endform.
+*&---------------------------------------------------------------------*
+*&      Form  GET_MATNR
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_IT  text
+*      -->P_P_WERKS  text
+*----------------------------------------------------------------------*
+form get_matnr  tables   p_it
+                           "Insert a correct name for <...>
+                using    p_p_werks.
+ select mard~MATNR maktx from mard INNER JOIN MAKT on MARD~matnr = MAKT~matnr into table p_it where werks = p_p_werks and spras = 'E'.
+endform.
+*&---------------------------------------------------------------------*
+*&      Form  GET_MATNR2
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*      -->P_IT  text
+*      -->P_P_LGORT  text
+*----------------------------------------------------------------------*
+form get_matnr2  tables   p_it
+                            "Insert a correct name for <...>
+                 using    p_p_lgort.
+select mard~MATNR maktx from mard  INNER JOIN MAKT on MARD~matnr = MAKT~matnr into table p_it where lgort =  p_p_lgort and spras = 'E'.
+endform.
+
+
+
+
+

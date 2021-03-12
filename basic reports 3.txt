@@ -1,0 +1,313 @@
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK12
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK12.
+
+DATA: it type TABLE OF YNEILDBPROJ,
+      wayneildbproj TYPE YNEILDBPROJ.
+
+Select * from YNEILDBPROJ into TABLE it UP TO 50 rows.
+WRITE:/'Projection VIew'.
+  loop at it INTO wayneildbproj.
+
+           write:/ wayneildbproj-mandt,
+                  wayneildbproj-vbeln,
+                  wayneildbproj-erdat,
+                  wayneildbproj-erzet,
+                  wayneildbproj-ernam,
+                  wayneildbproj-angdt,
+                  wayneildbproj-bnddt,
+                  wayneildbproj-audat,
+                  wayneildbproj-vbtyp,
+                  wayneildbproj-trvog.
+
+    endloop .
+
+
+
+
+
+
+
+
+13
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK13
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK13.
+
+
+Select VBELN,
+ERDAT,
+ERZET,
+ERNAM ,AUDAT from vbak INTO TABLE @DATA(IT_VBAK) up to 50 rows. "
+
+WRite: 2 'Sales order' , 16 'Created on', 28 'Entry time', 42 'Created by', 60 'Document Date'.
+
+*  loop  at it_vbak into DATA(wa_vbak).
+*    write:/ WA_VBAK-VBELN under 'Sales order'  ,
+*          wa_VBAK-ERDAT under 'Created on',
+*          WA_VBAK-ERZET under 'Entry time',
+*          WA_VBAK-ERNAM under 'Created by',
+*          wa_vbak-AUDAT under 'Document Date'.
+*
+*
+*    ENDLOOP.
+
+    loop  at it_vbak into DATA(wa_vbak).
+    write:/2  WA_VBAK-VBELN ,"under 'Sales order'  ,
+          16 wa_VBAK-ERDAT," under 'Created on',
+         28 WA_VBAK-ERZET," under 'Entry time',
+          42 WA_VBAK-ERNAM ,"under 'Created by',
+          60 wa_vbak-AUDAT." under 'Document Date'.
+
+
+    ENDLOOP.
+
+
+
+
+
+14
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK14
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK14.
+
+DATA:LV_KUNNR type kna1-kunnr.
+SELECT-OPTIONS:SOKUNNR for LV_KUNNR." customer number
+
+
+***kna1***
+select KUNNR, NAME1 , NAME2 from KNA1 INTO table @DATA(IT_KNA1) WHERE KUNNR  in @SOKUNNR.
+
+
+***vbak****
+if sy-subrc = 0.
+select VBELN,
+ERDAT,
+ERNAM,
+ KUNNR from  VBAK into TABLE @DATA(IT_VBAK) FOR ALL ENTRIES IN @IT_KNA1 where KUNNR = @IT_KNA1-kunnr.
+
+
+***VBAP****
+
+  if sy-subrc = 0.
+  Select VBELN,POSNR, MATNR ,ARKTX from vbap INTO table @DATA(IT_VBAP) FOR ALL ENTRIES IN @IT_VBAK where VBELN = @IT_VBAK-VBELN.
+
+    loop at it_vbap into DATA(WA_VBAP).
+
+      READ TABLE IT_VBAK INTO DATA(WA_VBAK)  with key vbeln = wa_VBAP-vbeln.
+
+      READ TABLE IT_KNA1 into DATA(wa_kna1) with key KUNNR = WA_VBAK-KUNNR.
+
+
+FORMAT color 3.
+WRITE:/ WA_KNA1-KUNNR,WA_KNA1-NAME1 ,WA_KNA1-NAME2.
+FORMAT color off.
+FORMAT color 5.
+WRITE :WA_VBAK-VBELN,WA_VBAK-ERNAM.
+FORMAT color off.
+FORMAT color 6.
+WRITE:WA_VBAP-POSNR,WA_VBAP-MATNR,WA_VBAP-ARKTX.
+FORMAT color off.
+      endloop.
+
+
+    endif.
+
+    endif.
+
+
+
+
+
+15
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK15
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik15.
+
+
+data:lv_kunnr type kna1-kunnr.
+select-options:sokunnr for lv_kunnr." customer number
+
+types:begin of ty_kna1,
+        kunnr type kna1-kunnr,
+        name1 type kna1-name1,
+        name2 type kna1-name2,
+
+      end of ty_kna1,
+
+
+      begin of ty_vbak,
+        vbeln type vbak-vbeln,
+        erdat type vbak-erdat,
+        ernam type vbak-ernam,
+        kunnr type vbak-kunnr,
+
+      end of ty_vbak,
+
+      begin of ty_vbap,
+        vbeln type vbap-vbeln,
+        posnr type vbap-posnr,
+        matnr type vbap-matnr,
+        arktx type vbap-arktx,
+      end of ty_vbap.
+
+
+
+***WORKAREA AND INTERNAL TABLE DECLARATION
+
+data: it_kna1 type table of ty_kna1,
+      wa_kna1 type ty_kna1,
+      it_vbak type table of ty_vbak,
+      wa_vbak type ty_vbak,
+      it_vbap type table of ty_vbap,
+      wa_vbap type ty_vbap.
+
+***kna1***
+select kunnr  name1  name2 from kna1 into table it_kna1 where kunnr  in sokunnr.
+
+
+***vbak****
+if sy-subrc = 0.
+  select vbeln
+  erdat
+  ernam
+   kunnr from  vbak into table it_vbak for all entries in it_kna1 where kunnr = it_kna1-kunnr.
+
+
+***VBAP****
+
+  if sy-subrc = 0.
+    select vbeln posnr  matnr arktx from vbap into table it_vbap for all entries in it_vbak where vbeln = it_vbak-vbeln.
+
+  endif.
+
+endif.
+
+
+loop at it_vbap into wa_vbap.
+
+  read table it_vbak into wa_vbak with key  vbeln = wa_vbap-vbeln.
+  read table it_kna1 into wa_kna1 with key kunnr = wa_vbak-kunnr.
+
+  format color 3.
+  write:/ wa_kna1-kunnr,wa_kna1-name1 ,wa_kna1-name2.
+  format color off.
+  format color 5.
+  write :wa_vbak-vbeln,wa_vbak-ernam.
+  format color off.
+  format color 6.
+  write:wa_vbap-posnr,wa_vbap-matnr,wa_vbap-arktx.
+  format color off.
+
+
+endloop.
+
+
+
+
+
+
+16
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK15
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik16.
+
+
+data:lv_kunnr type kna1-kunnr.
+select-options:sokunnr for lv_kunnr." customer number
+
+types:begin of ty_kna1,
+        kunnr type kna1-kunnr,
+        name1 type kna1-name1,
+        name2 type kna1-name2,
+
+      end of ty_kna1,
+
+
+      begin of ty_vbak,
+        vbeln type vbak-vbeln,
+        erdat type vbak-erdat,
+        ernam type vbak-ernam,
+        kunnr type vbak-kunnr,
+
+      end of ty_vbak,
+
+      begin of ty_vbap,
+        vbeln type vbap-vbeln,
+        posnr type vbap-posnr,
+        matnr type vbap-matnr,
+        arktx type vbap-arktx,
+      end of ty_vbap,
+
+      begin of ty_mara,
+        matnr type matnr,
+
+
+        end of ty_mara.
+
+
+
+***WORKAREA AND INTERNAL TABLE DECLARATION
+
+data: it_kna1 type table of ty_kna1,
+      wa_kna1 type ty_kna1,
+      it_vbak type table of ty_vbak,
+      wa_vbak type ty_vbak,
+      it_vbap type table of ty_vbap,
+      wa_vbap type ty_vbap.
+
+***kna1***
+select kunnr  name1  name2 from kna1 into table it_kna1 where kunnr  in sokunnr.
+
+
+***vbak****
+if sy-subrc = 0.
+  select vbeln
+  erdat
+  ernam
+   kunnr from  vbak into table it_vbak for all entries in it_kna1 where kunnr = it_kna1-kunnr.
+
+
+***VBAP****
+
+  if sy-subrc = 0.
+    select vbeln posnr  matnr arktx from vbap into table it_vbap for all entries in it_vbak where vbeln = it_vbak-vbeln.
+
+  endif.
+
+endif.
+
+WRITE:'Customer' ,'Name','name2 of customer' , 'Order' ,'Order date'.
+
+loop at it_vbap into wa_vbap.
+
+  read table it_vbak into wa_vbak with key  vbeln = wa_vbap-vbeln.
+  read table it_kna1 into wa_kna1 with key kunnr = wa_vbak-kunnr.
+
+  format color 3.
+  write:/ wa_kna1-kunnr UNDER 'Customer' ,wa_kna1-name1 under 'Name',wa_kna1-name2 under 'name2 of customer' .
+  format color off.
+  format color 5.
+  write :wa_vbak-vbeln,wa_vbak-ernam.
+  format color off.
+  format color 6.
+  write:wa_vbap-posnr,wa_vbap-matnr,wa_vbap-arktx.
+  format color off.
+
+
+endloop.

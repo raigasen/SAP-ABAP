@@ -1,0 +1,440 @@
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK30
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik30.
+
+selection-screen begin of tabbed block tab1 for 20 lines.
+
+selection-screen tab (40) title1 user-command tb1 default screen 1001.
+
+
+selection-screen tab (40) title2 user-command tb2 default screen 1002.
+
+
+selection-screen tab (40) title3 user-command tb3 default screen 1003.
+
+
+
+selection-screen end of block   tab1.
+
+
+selection-screen: begin of  screen 1001 as subscreen.
+parameters:r4 radiobutton group rg2  user-command uc1 modif id m1,
+           r5 radiobutton group rg2 modif id m1,
+           r6 radiobutton group rg2 modif id m1,
+           r7 radiobutton group rg2 default 'X' modif id m1.
+
+selection-screen end of screen 1001.
+
+selection-screen: begin of  screen 1002 as subscreen.
+
+selection-screen begin of block b3 with frame title text-003.
+parameters:c1 as checkbox user-command uc3 modif id m2,
+           c2 as checkbox user-command uc4 modif id m2,
+           c3 as checkbox user-command uc5 modif id m2.
+selection-screen: end  of block b3.
+selection-screen end of screen 1002.
+
+selection-screen: begin of  screen 1003 as subscreen.
+
+selection-screen: begin of block b4 with frame title text-004,
+
+begin of line,
+pushbutton 2(14) but1 user-command cli1 modif id m3,
+
+end of line,
+begin of line,
+pushbutton 2(14) but2 user-command cli2 modif id m3,
+
+end of line,
+
+begin of line,
+pushbutton 2(14) but3 user-command cli3 modif id m3,
+
+end of line.
+selection-screen: end  of block b4.
+
+
+
+selection-screen end of screen 1003.
+
+
+
+initialization.
+
+  title1 = 'Radiobutton'.
+  title2 = 'Checkbox'.
+  title3 = 'Pushbutton'.
+
+
+  but1 = 'Addition'.
+  but2 = 'Subtraction'.
+  but3 = 'Multiplication'.
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK27
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+report zneilpratik31.
+
+selection-screen begin of block b5 with frame title text-005.
+parameters:p1 type i,
+           p2 type i modif id m5,
+           p3 type i modif id m4.
+
+
+selection-screen: end  of block b5.
+selection-screen begin of tabbed block tab1 for 20 lines.
+
+selection-screen tab (40) title1 user-command tb1 default screen 1001.
+
+
+selection-screen tab (40) title2 user-command tb2 default screen 1002.
+
+
+selection-screen tab (40) title3 user-command tb3 default screen 1003.
+
+
+
+selection-screen end of block   tab1.
+
+
+selection-screen: begin of  screen 1001 as subscreen.
+parameters:r4 radiobutton group rg2  user-command uc1 modif id m1,
+           r5 radiobutton group rg2 modif id m1,
+           r6 radiobutton group rg2 modif id m1,
+           r7 radiobutton group rg2 default 'X' modif id m1.
+
+selection-screen end of screen 1001.
+
+selection-screen: begin of  screen 1002 as subscreen.
+
+selection-screen begin of block b3 with frame title text-003.
+parameters:c1 as checkbox user-command uc3 modif id m2,
+           c2 as checkbox user-command uc4 modif id m2,
+           c3 as checkbox user-command uc5 modif id m2.
+selection-screen: end  of block b3.
+selection-screen end of screen 1002.
+
+selection-screen: begin of  screen 1003 as subscreen.
+
+selection-screen: begin of block b4 with frame title text-004,
+
+begin of line,
+pushbutton 2(14) but1 user-command cli1 modif id m3,
+
+end of line,
+begin of line,
+pushbutton 2(14) but2 user-command cli2 modif id m3,
+
+end of line,
+
+begin of line,
+pushbutton 2(14) but3 user-command cli3 modif id m3,
+
+end of line.
+selection-screen: end  of block b4.
+
+
+
+selection-screen end of screen 1003.
+
+
+
+initialization.
+
+  title1 = 'Radiobutton'.
+  title2 = 'Checkbox'.
+  title3 = 'Pushbutton'.
+
+
+  but1 = 'Addition'.
+  but2 = 'Subtraction'.
+  but3 = 'Multiplication'.
+
+
+
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK32
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK32.
+
+types:begin of ty_student," ty_student is name of structure
+         rollnu type n LENGTH 3,
+        name    type c length 10,
+        sirname type c length 20,
+        mob     type n length 10, " fields of strucutre
+
+      end of ty_student.
+
+
+data: wa type ty_student. " name sirname and mob workarea single record
+data: it type table of ty_student ."internal table multiple record
+
+wa-rollnu = 5.
+wa-name = 'Neil'.
+wa-sirname = 'Prateek'.
+wa-mob = '909090'.
+
+append  wa to it.
+
+wa-rollnu = 3.
+wa-name = 'Neil1'.
+wa-sirname = 'Prateek1'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 6.
+wa-name = 'Neil2'.
+wa-sirname = 'Prateek2'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 2.
+wa-name = 'Neil3'.
+wa-sirname = 'Prateek3'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 4.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+wa-rollnu = 1.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+loop at it into wa.
+
+  write: /  wa-rollnu color 6, wa-name color 3 ,wa-sirname color 4,wa-mob color 5.
+
+endloop.
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK32
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK33.
+
+types:begin of ty_student," ty_student is name of structure
+        rollnu type n LENGTH 3,
+        name    type c length 10,
+        sirname type c length 20,
+        mob     type n length 10, " fields of strucutre
+
+      end of ty_student.
+
+
+data: wa type ty_student. " name sirname and mob workarea single record
+data: it type SORTED TABLE OF ty_student with non-UNIQUE key ROLLNU  ."internal table multiple record
+
+wa-rollnu = 6.
+wa-name = 'Neil'.
+wa-sirname = 'Prateek'.
+wa-mob = '909090'.
+
+insert  wa into TABLE it.
+
+wa-rollnu = 4.
+wa-name = 'Neil1'.
+wa-sirname = 'Prateek1'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 3.
+wa-name = 'Neil2'.
+wa-sirname = 'Prateek2'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 3.
+wa-name = 'Neil3'.
+wa-sirname = 'Prateekorig'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 2.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateekdup'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+
+wa-rollnu = 1.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+
+loop at it into wa.
+
+  write: /  wa-rollnu color 6, wa-name color 3 ,wa-sirname color 4,wa-mob color 5.
+
+endloop.
+
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK32
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK34.
+
+types:begin of ty_student," ty_student is name of structure
+         rollnu type n LENGTH 3,
+        name    type c length 10,
+        sirname type c length 20,
+        mob     type n length 10, " fields of strucutre
+
+      end of ty_student.
+
+
+data: wa type ty_student. " name sirname and mob workarea single record
+data: it type SORTED TABLE OF ty_student with NON-UNIQUE key ROLLNU."internal table multiple record
+
+wa-rollnu = 1.
+wa-name = 'Neil'.
+wa-sirname = 'Prateek'.
+wa-mob = '909090'.
+
+append  wa to it.
+
+wa-rollnu = 2.
+wa-name = 'Neil1'.
+wa-sirname = 'Prateek1'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 3.
+wa-name = 'Neil2'.
+wa-sirname = 'Prateek2'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 4.
+wa-name = 'Neil3'.
+wa-sirname = 'Prateek3'.
+wa-mob = '909090'.
+append  wa to it.
+
+wa-rollnu = 5.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+wa-rollnu = 6.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+append  wa to it.
+
+
+loop at it into wa FROM 2 to 5.
+
+  write: /  wa-rollnu color 6, wa-name color 3 ,wa-sirname color 4,wa-mob color 5.
+
+endloop.
+
+
+
+
+
+*&---------------------------------------------------------------------*
+*& Report ZNEILPRATIK32
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZNEILPRATIK35.
+
+types:begin of ty_student," ty_student is name of structure
+        rollnu type n LENGTH 3,
+        name    type c length 10,
+        sirname type c length 20,
+        mob     type n length 10, " fields of strucutre
+
+      end of ty_student.
+
+
+data: wa type ty_student. " name sirname and mob workarea single record
+data: it type hashed table of ty_student with UNIQUE KEY ROLLNU  ."internal table multiple record
+
+wa-rollnu = 6.
+wa-name = 'Neil'.
+wa-sirname = 'Prateek'.
+wa-mob = '909090'.
+
+insert  wa into TABLE it.
+
+wa-rollnu = 4.
+wa-name = 'Neil1'.
+wa-sirname = 'Prateek1'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 3.
+wa-name = 'Neil2'.
+wa-sirname = 'Prateek2'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 3.
+wa-name = 'Neil3'.
+wa-sirname = 'Prateekorig'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+wa-rollnu = 2.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateekdup'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+
+
+wa-rollnu = 1.
+wa-name = 'Neil4'.
+wa-sirname = 'Prateek4'.
+wa-mob = '909090'.
+insert  wa into TABLE it.
+sort it by rollnu.
+
+
+loop at it into wa .
+
+  write: /  wa-rollnu color 6, wa-name color 3 ,wa-sirname color 4,wa-mob color 5.
+
+endloop.
